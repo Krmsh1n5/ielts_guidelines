@@ -5,14 +5,54 @@
 <meta charset="utf-8"/>
 <meta content="width=device-width,initial-scale=1,shrink-to-fit=no,viewport-fit=cover" name="viewport"/>
 <title>Dmitriy Kuramshin | IELTS preparation notes</title>
+<script>
+(function(){
+  function preferredTheme(){
+    try{
+      var stored=localStorage.getItem('theme');
+      if(stored==='light'||stored==='dark')return stored;
+    }catch(e){}
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
+  }
+  document.documentElement.setAttribute('data-theme',preferredTheme());
+  window.toggleTheme=function(){
+    var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  };
+})();
+</script>
 <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     :root{
-      --black:#0f0f0f;--ink:#1a1a1a;--mid:#555;--light:#999;--faint:#ccc;
+      --black:#0f0f0f;--ink:#1a1a1a;--mid:#555;--light:#707070;--faint:#999;
       --line:#e8e8e8;--paper:#fafaf8;--bg:#fff;
       --reading:#1d4ed8;--listening:#b45309;--speaking:#6d28d9;--writing:#b91c1c;
+      --nav-bg:rgba(0,0,0,.055);--toc-bg:rgba(255,255,255,.97);
+      color-scheme:light;
     }
-    html{font-size:16px;scroll-behavior:smooth}
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]){
+        --black:#f4f4f2;--ink:#e5e5e2;--mid:#aeaea8;--light:#96948d;--faint:#7d7c74;
+        --line:#2c2c2a;--paper:#1b1b1a;--bg:#121211;
+        --reading:#7fa4f2;--listening:#e0973f;--speaking:#b09af9;--writing:#f0807f;
+        --nav-bg:rgba(255,255,255,.06);--toc-bg:rgba(27,27,26,.97);
+        color-scheme:dark;
+      }
+    }
+    :root[data-theme="dark"]{
+      --black:#f4f4f2;--ink:#e5e5e2;--mid:#aeaea8;--light:#96948d;--faint:#7d7c74;
+      --line:#2c2c2a;--paper:#1b1b1a;--bg:#121211;
+      --reading:#7fa4f2;--listening:#e0973f;--speaking:#b09af9;--writing:#f0807f;
+      --nav-bg:rgba(255,255,255,.06);--toc-bg:rgba(27,27,26,.97);
+      color-scheme:dark;
+    }
+    html{font-size:16px;background:var(--bg)}
+    @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+    html,body{transition:background-color .2s ease,color .2s ease}
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{transition-duration:.001ms!important;animation-duration:.001ms!important}
+    }
     body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--ink);font-size:1.02rem;max-width:860px;margin:0 auto;padding:0 2.25rem}
     a{color:inherit;text-decoration:none}
     a:hover{text-decoration:underline}
@@ -26,6 +66,20 @@
     .nav-links{list-style:none;display:flex;gap:1.5rem;font-family:system-ui,sans-serif;font-size:.8rem}
     .nav-links a{color:var(--mid)}
     .nav-links a:hover{color:var(--black);text-decoration:none}
+    .nav-links li.theme-toggle-item{display:flex;align-items:center}
+    .theme-toggle{
+      display:inline-flex;align-items:center;justify-content:center;
+      width:1.85rem;height:1.85rem;border-radius:999px;
+      border:1px solid var(--line);background:var(--paper);color:var(--mid);
+      padding:0;flex-shrink:0;
+      transition:background-color .2s ease,border-color .2s ease,color .2s ease;
+    }
+    .theme-toggle:hover{color:var(--black);border-color:var(--faint)}
+    .theme-toggle svg{width:1rem;height:1rem;display:block}
+    .theme-toggle .icon-sun{display:none}
+    .theme-toggle .icon-moon{display:block}
+    :root[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+    :root[data-theme="dark"] .theme-toggle .icon-moon{display:none}
 
     /* PAGES */
     .page{display:none}
@@ -266,8 +320,9 @@
     body{width:100%;}
     nav{
       position:sticky;top:0;z-index:120;
-      background:rgba(255,255,255,.94);
+      background:var(--nav-bg);
       backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      transition:background-color .2s ease,border-color .2s ease;
     }
     .nav-links{align-items:center;flex-wrap:wrap}
 
@@ -275,12 +330,12 @@
     .toc-wrap{
       left:0;top:4.75rem;width:min(17rem,82vw);
       padding:.85rem 1rem .95rem 1.1rem;
-      background:rgba(255,255,255,.97);
+      background:var(--toc-bg);
       border:1px solid var(--line);border-left:0;border-radius:0 6px 6px 0;
       box-shadow:0 10px 30px rgba(0,0,0,.06);
       transform:translateX(calc(-100% + 18px));
       opacity:.34;
-      transition:transform .2s ease,opacity .2s ease;
+      transition:transform .2s ease,opacity .2s ease,background-color .2s ease,border-color .2s ease;
     }
     .toc-wrap::after{
       content:'contents';position:absolute;right:-1px;top:1rem;
@@ -363,7 +418,7 @@
         bottom:calc(1rem + env(safe-area-inset-bottom));
         width:auto;max-height:min(62vh,34rem);
         padding:0;
-        background:rgba(255,255,255,.985);
+        background:var(--toc-bg);
         border:1px solid var(--line);border-radius:10px;
         box-shadow:0 12px 36px rgba(0,0,0,.12);
         transform:none;opacity:1;overflow:hidden;
@@ -402,11 +457,12 @@
         min-height:3.55rem;
         padding:calc(.45rem + env(safe-area-inset-top)) 0 .45rem;
         align-items:center;flex-wrap:nowrap;gap:.75rem;
-        background:rgba(255,255,255,.97);
+        background:var(--nav-bg);
       }
       .nav-brand{font-size:.95rem;white-space:nowrap}
       .nav-links{gap:.35rem;flex-wrap:nowrap;margin-left:auto}
       .nav-links a{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 .45rem;font-size:.76rem}
+      .theme-toggle{width:2.15rem;height:2.15rem}
 
       .back-btn{padding:.85rem 0 .25rem;min-height:40px}
       .back-btn-sm{min-height:38px}
@@ -620,6 +676,180 @@
 .prompt-source-note{font-family:system-ui,sans-serif;font-size:.68rem;color:var(--light);line-height:1.55;margin:-.55rem 0 1.25rem 0;max-width:650px}
 .prompt-source-note a,.practice-source a{color:var(--mid);text-decoration:underline;text-underline-offset:2px}
 .practice-source{display:block;font-family:system-ui,sans-serif;font-size:.64rem;color:var(--light);line-height:1.45;margin-top:.38rem;font-weight:400}
+
+
+    /* === TENSOR-INSPIRED UI REFINEMENT ===
+       Full-bleed header, stable theme switching, darker neutral palette,
+       and tighter responsive behavior while preserving this site's identity. */
+    :root{
+      --black:#111316;
+      --ink:#202328;
+      --mid:#5f646b;
+      --light:#777d85;
+      --faint:#9aa0a7;
+      --line:#e2e4e6;
+      --paper:#f5f5f3;
+      --bg:#fbfbfa;
+      --header-bg:rgba(251,251,250,.96);
+      --nav-bg:var(--header-bg);
+      --toc-bg:rgba(251,251,250,.985);
+      --header-h:64px;
+    }
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]){
+        --black:#f5f7f8;
+        --ink:#e7eaed;
+        --mid:#b3b8bf;
+        --light:#878e97;
+        --faint:#666d76;
+        --line:#292e35;
+        --paper:#15181c;
+        --bg:#0d0f12;
+        --header-bg:rgba(13,15,18,.96);
+        --nav-bg:var(--header-bg);
+        --toc-bg:rgba(18,21,25,.985);
+        --reading:#79aaff;
+        --listening:#eea04c;
+        --speaking:#b7a1ff;
+        --writing:#f48480;
+      }
+    }
+    :root[data-theme="dark"]{
+      --black:#f5f7f8;
+      --ink:#e7eaed;
+      --mid:#b3b8bf;
+      --light:#878e97;
+      --faint:#666d76;
+      --line:#292e35;
+      --paper:#15181c;
+      --bg:#0d0f12;
+      --header-bg:rgba(13,15,18,.96);
+      --nav-bg:var(--header-bg);
+      --toc-bg:rgba(18,21,25,.985);
+      --reading:#79aaff;
+      --listening:#eea04c;
+      --speaking:#b7a1ff;
+      --writing:#f48480;
+    }
+
+    html,body{transition:none}
+    html{background:var(--bg);scroll-padding-top:calc(var(--header-h) + 1rem)}
+    body{background:var(--bg)}
+    [id^="sec-"]{scroll-margin-top:calc(var(--header-h) + 1rem)}
+
+    /* The header is a viewport-wide surface. Its contents still align to the
+       same 860px reading column, so the bar no longer looks like a detached card. */
+    nav{
+      position:sticky;
+      top:0;
+      z-index:220;
+      min-height:var(--header-h);
+      margin-left:calc(50% - 50vw);
+      margin-right:calc(50% - 50vw);
+      padding:0 max(1.25rem,calc((100vw - 860px)/2 + 2.25rem));
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1rem;
+      background:var(--header-bg);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(18px) saturate(135%);
+      -webkit-backdrop-filter:blur(18px) saturate(135%);
+      transition:none;
+      box-shadow:none;
+    }
+    .nav-brand{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:.84rem;line-height:1;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+    .nav-brand a{display:inline-flex;align-items:center;min-height:44px;color:var(--black);text-decoration:none}
+    .brand-short{display:none}
+    .nav-links{align-items:center;gap:.4rem;flex-wrap:nowrap;margin-left:auto;font-size:.76rem}
+    .nav-links li{display:flex;align-items:center}
+    .nav-links a{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 .58rem;color:var(--light);border-radius:5px;text-decoration:none}
+    .nav-links a:hover{color:var(--black);background:var(--paper);text-decoration:none}
+    .theme-toggle{
+      width:2.25rem;height:2.25rem;
+      border:1px solid transparent;
+      background:transparent;
+      color:var(--light);
+      transition:none;
+    }
+    .theme-toggle:hover{color:var(--black);background:var(--paper);border-color:var(--line)}
+    .theme-toggle svg{width:1rem;height:1rem}
+    .nav-brand a:focus-visible,.nav-links a:focus-visible,.theme-toggle:focus-visible,.toc-mobile-toggle:focus-visible,.toc-item:focus-visible{
+      outline:2px solid var(--reading);outline-offset:2px
+    }
+
+    /* Dark mode should feel like one continuous canvas, not stacked grey slabs. */
+    :root[data-theme="dark"] .skill-thumb,
+    :root[data-theme="dark"] .chapter-cover{background:#12151a}
+    :root[data-theme="dark"] .skill-thumb svg rect:first-child,
+    :root[data-theme="dark"] .chapter-cover svg rect:first-child{fill:#12151a!important}
+    :root[data-theme="dark"] .skill-thumb svg,
+    :root[data-theme="dark"] .chapter-cover svg{filter:brightness(.82) saturate(.9)}
+    @media(prefers-color-scheme:dark){
+      :root:not([data-theme="light"]) .skill-thumb,
+      :root:not([data-theme="light"]) .chapter-cover{background:#12151a}
+      :root:not([data-theme="light"]) .skill-thumb svg rect:first-child,
+      :root:not([data-theme="light"]) .chapter-cover svg rect:first-child{fill:#12151a!important}
+      :root:not([data-theme="light"]) .skill-thumb svg,
+      :root:not([data-theme="light"]) .chapter-cover svg{filter:brightness(.82) saturate(.9)}
+    }
+
+    /* Slightly calmer borders and surfaces, closer to a long-form technical article. */
+    .skill-thumb,.chapter-cover,.reading-timing-card,.reading-strategy-card,.reading-type,
+    .listening-part-card,.source-ref-card,.fivew-item{border-color:var(--line)}
+    .reading-callout,.listening-callout,.progress-note,.task2-family-card,.personal-task-card,.legal-note{background:var(--paper)}
+    .model-essay-prompt,.reading-example{background:var(--paper)}
+
+    /* Tablet: keep the full-width header, while reducing the side gutters. */
+    @media(max-width:900px){
+      nav{padding-left:1.5rem;padding-right:1.5rem}
+    }
+
+    /* Mobile follows the reference's article-first behavior: a single compact
+       top row, full-width header surface, generous content gutter, and no wrap. */
+    @media(max-width:700px){
+      :root{--header-h:56px}
+      html{scroll-padding-top:calc(var(--header-h) + .8rem)}
+      body{
+        padding-left:max(1.05rem,env(safe-area-inset-left));
+        padding-right:max(1.05rem,env(safe-area-inset-right));
+      }
+      [id^="sec-"]{scroll-margin-top:calc(var(--header-h) + .8rem)}
+      nav{
+        min-height:calc(var(--header-h) + env(safe-area-inset-top));
+        margin-left:calc(50% - 50vw);
+        margin-right:calc(50% - 50vw);
+        padding-top:env(safe-area-inset-top);
+        padding-left:max(1.05rem,env(safe-area-inset-left));
+        padding-right:max(1.05rem,env(safe-area-inset-right));
+        padding-bottom:0;
+        flex-wrap:nowrap;
+        gap:.55rem;
+      }
+      .nav-brand{font-size:.8rem;min-width:0}
+      .nav-links{gap:.1rem;min-width:0}
+      .nav-links a{min-height:40px;padding:0 .42rem;font-size:.73rem}
+      .theme-toggle{width:2.1rem;height:2.1rem}
+      .home-hero{padding-top:2rem}
+      .skill-page-header,.type-page-header,.sources-page-header{padding-top:1.55rem}
+      .toc-wrap{z-index:260}
+    }
+
+    @media(max-width:430px){
+      body{padding-left:max(.95rem,env(safe-area-inset-left));padding-right:max(.95rem,env(safe-area-inset-right))}
+      nav{padding-left:max(.95rem,env(safe-area-inset-left));padding-right:max(.95rem,env(safe-area-inset-right));gap:.35rem}
+      .brand-full{display:none}
+      .brand-short{display:inline}
+      .nav-links a{padding:0 .34rem;font-size:.71rem}
+      .theme-toggle{width:2rem;height:2rem}
+      .home-hero h1{font-size:clamp(1.5rem,8vw,1.9rem)}
+    }
+
+    @media(max-width:350px){
+      .nav-links li:first-child{display:none}
+      .nav-links a{padding:0 .28rem}
+    }
+
 </style>
 </head>
 <body>
@@ -629,10 +859,14 @@
 <ul class="toc-list" id="toc-list"></ul>
 </div>
 <nav>
-<div class="nav-brand"><a href="#" onclick="showPage('home');return false;">Dmitriy’s IELTS notes</a></div>
+<div class="nav-brand"><a href="#" onclick="showPage('home');return false;"><span class="brand-full">Dmitriy’s IELTS notes</span><span class="brand-short">IELTS notes</span></a></div>
 <ul class="nav-links">
 <li><a href="#" onclick="showPage('home');return false;">home</a></li>
 <li><a href="#" onclick="showPage('sources');return false;">sources</a></li>
+<li class="theme-toggle-item"><button aria-label="Toggle dark mode" class="theme-toggle" onclick="toggleTheme()" title="Toggle dark mode" type="button">
+<svg class="icon-sun" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"></path></svg>
+<svg class="icon-moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5z"></path></svg>
+</button></li>
 </ul>
 </nav>
 <!-- ══ HOME ══ -->
